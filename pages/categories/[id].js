@@ -1,25 +1,20 @@
-import { useRouter } from 'next/router'
-import { useState, useEffect } from 'react'
-import { getProductsByCategory } from '../../services/products'
-import { Container } from '../../styles/Categories.module.css'
-import { ProductsContext } from '../../context/products'
+import { ProductsContextProvider } from '../../context/products'
 import ProductsList from '../../components/ProductsList'
+import { useSelector, useDispatch } from 'react-redux'
+import { incrementByAmount, selectCounterValue } from '../../features/counterSlice'
 
 export default function CategoriesDetail() {
-    const router = useRouter()
-    const { id } = router.query
-    const [products, setProducts] = useState([]);
+    const dispatch = useDispatch();
+    const counterValue = useSelector(selectCounterValue)
 
-    useEffect(() => {
-        if(id) {
-            getProductsByCategory(id).then(data => setProducts(data))
-        }
-    }, [id])
+    const onIncrementCounter = () => dispatch(incrementByAmount(3))
 
     return (
-        <ProductsContext.Provider value={{products}}>
+        <ProductsContextProvider>
+            <h1>Counter: {counterValue}</h1>
+            <button onClick={onIncrementCounter}>Increment</button>
             <h1>Pagina Dettaglio Categoria</h1>
             <ProductsList />
-        </ProductsContext.Provider>
+        </ProductsContextProvider>
     )
 }

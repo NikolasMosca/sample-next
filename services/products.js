@@ -34,3 +34,13 @@ export const getProductsByCategory = async (id) => {
     //Fitlro i prodotti in base alla categoria 
     return data.filter(({category_id}) => category_id === Number(id))
 }
+
+export const getProducts = async () => {
+    const {status, data} = await fetch('/products.json').then(response => response.json());
+    if(status !== 'success') {
+        console.log('qualcosa è andato storto', data)
+        throw new Error('status non valido');
+    }
+
+    return data
+}

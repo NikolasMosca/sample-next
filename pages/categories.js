@@ -1,13 +1,21 @@
 import { useState, useEffect } from 'react'
 import { Container } from '../styles/Categories.module.css'
-import { getCategories } from '../services/products'
+import { getProducts } from '../services/products'
+import { useSelector, useDispatch } from 'react-redux'
+import { selectPublicCategories, selectProductsAlreadyLoaded, setProducts } from '../features/productSlice'
 
 export default function Categories() {
-    const [categories, setCategories] = useState([])
+    const dispatch = useDispatch();
+    const alreadyLoaded = useSelector(selectProductsAlreadyLoaded);
+    const categories = useSelector(selectPublicCategories);
+    //const [categories, setCategories] = useState([])
 
     useEffect(() => {
-        getCategories().then((data) => setCategories(data))
-    }, [])
+        //getCategories().then((data) => setCategories(data))
+        if(!alreadyLoaded) {
+            getProducts().then((data) => dispatch(setProducts(data)))
+        }
+    }, [alreadyLoaded])
 
     return (
         <>
